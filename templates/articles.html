@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+
+{% if articles %}
+    <div class="container mt-5">
+        <h1>Makaleler</h1>
+        <hr>
+        <form class="form-inline mt-2 mt-md-0">
+            {% csrf_token %}
+            <input class="form-control mr-sm-2" name="keyword" type="text" placeholder="Arama Yap" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Ara</button>
+        </form>
+    </div>    
+    {% for article in articles %}
+
+        <div class="container mt-5">
+            <div class="row">
+                    <div class="col-lg-8">
+                        <!-- Post content-->
+                        <article>
+                            <!-- Post header-->
+                            <header class="mb-4">
+                                <!-- Post title-->
+                                <a href="{% url 'article:detail' article.id %}"><h2 class="fw-bolder mb-1">{{article.title}}</h2></a>
+                                <p class ="lead">
+                                    {{article.author.username}} tarafından
+                                </p>
+                                <!-- Post meta content-->
+                                <div class="text-muted fst-italic mb-2">{{article.created_date}} tarihinde oluşturuldu.</div>
+                            </header>
+                            <!-- Preview image figure-->
+                            {% if article.article_image %}
+                                <figure class="mb-4"><img class="img-fluid rounded" src="{{article.article_image.url}}" alt="..." draggable="false" style="filter: blur(0px);"></figure>
+                            {% endif %}
+                            <!-- Post content-->
+                            <section class="mb-5">
+                                <p>  
+                                    {{article.content|safe|truncatewords:100}}
+                                    <a style="float:right" href="/articles/article/{{article.id}}">Devamını Oku...</a>
+                                </p>
+                            </section>
+                        </article>
+                    </div>   
+            </div>
+        </div>
+
+    {% endfor %}
+
+{% else%}
+    <br>
+    <form class="form-inline mt-2 mt-md-0">
+        {% csrf_token %}
+        <input class="form-control mr-sm-2" name="keyword" type="text" placeholder="Arama Yap" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Ara</button>
+    </form>
+    <br>
+    <br>
+    <div class = "alert alert-danger">
+        Makale bulunamadı.
+    </div>
+
+{% endif%}
+
+{% endblock body %}
+
